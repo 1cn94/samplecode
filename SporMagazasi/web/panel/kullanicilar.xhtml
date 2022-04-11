@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Category</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            <h:commandButton action="/index" value="Home" />
+
+        </h:form>
+        <hr />
+        <h:form>
+            Kuladi: <h:inputText value="#{kullanicilarBean.entity.kuladi}"/>
+            Sifre:  <h:inputSecret value="#{kullanicilarBean.entity.sifre}" />
+            Adi:    <h:inputText value="#{kullanicilarBean.entity.adi}" />
+            Soyadi: <h:inputText value="#{kullanicilarBean.entity.soyadi}" />
+            mail:   <h:inputText value="#{kullanicilarBean.entity.mail}" />
+            <h:commandButton rendered= "#{kullanicilarBean.entity.id==0}" action="#{kullanicilarBean.create()}" value="Create"/>
+            <h:commandButton rendered= "#{kullanicilarBean.entity.id!=0}" action="#{kullanicilarBean.update()}" value="Update"/>
+            <h:commandButton rendered= "#{kullanicilarBean.entity.id!=0}" action="#{kullanicilarBean.clear()}" value="Clear Form"/>
+        </h:form> 
+        <hr />
+        <h:form>
+            <h:dataTable value ="#{kullanicilarBean.list}" var="entity">
+                <h:column>
+
+                    <f:facet name="header">ID</f:facet>
+                        #{entity.id}
+                </h:column>
+                <h:column>
+
+                    <f:facet name="header">Kuladi</f:facet>
+                        #{entity.kuladi}
+                </h:column>
+                <h:column>
+
+                    <f:facet name="header">Sifre</f:facet>
+                        #{entity.sifre}
+                </h:column>
+                <h:column>
+
+                    <f:facet name="header">Adi</f:facet>
+                        #{entity.adi}
+                </h:column>
+                <h:column>
+
+                    <f:facet name="header">Soyadi</f:facet>
+                        #{entity.soyadi}
+                </h:column>
+                <h:column>
+
+                    <f:facet name="header">Mail</f:facet>
+                        #{entity.mail}
+                </h:column>
+                <h:column>
+
+                    <f:facet name="header">Tarih</f:facet>
+                        #{entity.tarih}
+                </h:column>
+                <h:column>
+
+                    <f:facet name="header">ADMINISTRATION</f:facet>
+                    <h:commandButton action="#{kullanicilarBean.delete(entity)}" value="Delete"/>
+                    <h:commandButton action="#{kullanicilarBean.setEntity(entity)}" value="Update"/>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </h:body>
+</html>
+
