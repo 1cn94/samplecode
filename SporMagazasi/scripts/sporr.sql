@@ -5,7 +5,7 @@ create table kullanicilar(
   adi varchar(255),
   soyadi varchar(255),
   mail varchar(255),
-  tarih TIMESTAMP default CURRENT_TIMESTAMP,
+  tarih TIMESTAMP default CURRENT_TIMESTAMP
   
 );
 
@@ -21,7 +21,7 @@ CREATE TABLE siparisler (
 
 CREATE TABLE kategoriler (
   id Serial PRIMARY KEY,
-  kategoriadi varchar(255) not NULL,
+  kategoriadi varchar(255) not NULL
  
 );
 
