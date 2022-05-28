@@ -23,10 +23,53 @@ public class UrunlerBean implements Serializable {
     private UrunlerDAO dao;
     private List<Urunler> list;
 
-    /**
-     * Creates a new instance of UrunlerBean
-     */
+
     public UrunlerBean() {
+    }
+    private int page = 1;
+    private int pageSize = 3;
+    private int pageCount;
+
+    public void next() {
+        if (this.page == this.getPageCount()) {
+            this.page = 1;
+        } else {
+            this.page++;
+        }
+
+    }
+
+    public void previous() {
+        if (this.page == 1) {
+            this.page = this.getPageCount();
+        } else {
+            this.page--;
+        }
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public void setPageCount(int pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    public int getPageCount() {
+        this.pageCount = (int) Math.ceil(this.getDao().count() / (double) pageSize);
+        return pageCount;
     }
 
     public void create() {
@@ -67,12 +110,16 @@ public class UrunlerBean implements Serializable {
     }
 
     public List<Urunler> getList() {
-        this.list = this.getDao().getList();
+        this.list = this.getDao().getUrunlerList(page, pageSize);
+        for (int i = 0; i < this.list.size(); i++) {
+            System.out.println(this.list.get(i).getId());
+        }
         return list;
     }
 
     public void setList(List<Urunler> list) {
         this.list = list;
     }
+
 
 }

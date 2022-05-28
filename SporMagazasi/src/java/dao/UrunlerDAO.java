@@ -6,6 +6,7 @@ package dao;
 
 import entity.Kategoriler;
 import entity.Urunler;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -61,26 +62,43 @@ public class UrunlerDAO extends DBConnection {
 
     }
 
-    public List<Urunler> getList() {
-        List<Urunler> list = new ArrayList<>();
+    public List<Urunler> getUrunlerList(int page, int pageSize) {
+        List<Urunler> urunlerList = new ArrayList<>();
+        int start = (page - 1) * pageSize;
         try {
-            Statement st = this.getConnection().createStatement();
 
-            String query = "select * from urunler";
+            PreparedStatement pst = this.getConnection().prepareStatement("select * from urunler order by id  asc limit " + pageSize + "offset " + start);
 
-            ResultSet rs = st.executeQuery(query);
+            ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
                 Kategoriler c = this.getKategorilerDao().findByID(rs.getInt("kategoriler_id"));
-
-                list.add(new Urunler(rs.getInt("id"), c, rs.getString("baslik"), rs.getString("urundetayi"), rs.getInt("kampanyali_fiyati"), rs.getInt("Normal_fiyati"), rs.getInt("stok")));
+                urunlerList.add(new Urunler(rs.getInt("id"), c, rs.getString("baslik"), rs.getString("urundetayi"), rs.getInt("kampanyali_fiyati"), rs.getInt("Normal_fiyati"), rs.getInt("stok")));
             }
 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
-        return list;
+        return urunlerList;
+    }
 
+    public int count() {
+        int count = 0;
+        try {
+            Statement st = this.getConnection().createStatement();
+            String query = "select count(id) as urunler_count from urunler";
+
+            ResultSet rs = st.executeQuery(query);
+            rs.next();
+            count = rs.getInt("urunler_count");
+            while (rs.next()) {
+
+            }
+
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return count;
     }
 
     public KategorilerDAO getKategorilerDao() {

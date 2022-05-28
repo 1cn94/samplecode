@@ -1,79 +1,104 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <h:head>
-        <title>Siparisler</title>
-    </h:head>
-    <h:body>
-        <h:form>
-            <h:commandButton action="/index" value="Home" />
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template.xhtml">
 
-        </h:form>
-        <hr />
+    <ui:define name="content">
         <h:form>
+            <h:commandButton action="/private" value="Geri"/>         
+        </h:form>
+        <h:form id="category-form">
             Kategoriler: <h:selectOneMenu value="#{urunlerBean.entity.kategoriler}" converter = "kategorilerConverter" >
                 <f:selectItems value="#{kategorilerBean.list}" var="c" itemValue="#{c}" itemLabel="#{c.kategoriadi}" />
 
-
             </h:selectOneMenu>
 
-            <br/>
-            Baslik: <h:inputText value="#{urunlerBean.entity.baslik}"/><br/>
-            UrunDetayi: <h:inputText value="#{urunlerBean.entity.urundetayi}" /><br/>
-            Kampanyali_Fiyat: <h:inputText value="#{urunlerBean.entity.kampanyali_fiyati}" /><br/>
-            NormalFiyat: <h:inputText value="#{urunlerBean.entity.normal_fiyati}" /><br/>
-            Stok: <h:inputText value="#{urunlerBean.entity.stok}" /><br/>
-            <h:commandButton rendered= "#{urunlerBean.entity.id==0}" action="#{urunlerBean.create()}" value="Create"/>
-            <h:commandButton rendered= "#{urunlerBean.entity.id!=0}" action="#{urunlerBean.update()}" value="Update"/>
-        </h:form> 
+
+            <div class="mb-3">
+                <label class="form-label">baslik</label>
+                <h:inputText styleClass="form-control" value="#{urunlerBean.entity.baslik}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">urundetayi</label>
+                <h:inputText styleClass="form-control" value="#{urunlerBean.entity.urundetayi}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">kampanyali_fiyati</label>
+                <h:inputText styleClass="form-control" value="#{urunlerBean.entity.kampanyali_fiyati}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">normal_fiyati</label>
+                <h:inputText styleClass="form-control" value="#{urunlerBean.entity.normal_fiyati}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">stok</label>
+                <h:inputText styleClass="form-control" value="#{urunlerBean.entity.stok}"/>
+            </div>
+            <div class="mb-3">
+                <h:commandButton styleClass="btn btn-success" action="#{urunlerBean.create()}" value="Kaydet">
+                    <f:ajax execute="category-form" render="category-table category-form" />
+                </h:commandButton>
+                <h:commandButton styleClass="btn btn-primary" rendered="#{urunlerBean.entity.id!=0}" action="#{urunlerBean.update()}" value="Güncelle" >
+                    <f:ajax execute="category-form" render="category-table category-form" />
+                </h:commandButton>
+
+            </div>
+        </h:form>
+
         <hr />
-        <h:form>
-            <h:dataTable value ="#{urunlerBean.list}" var="entity">
-                <h:column>
+        <hr />
 
-                    <f:facet name="header">ID</f:facet>
-                        #{entity.id}
+        <h:form id="category-table">
+            <pre>
+                Page #{urunlerBean.page} of #{urunlerBean.pageCount}
+            </pre> 
+            <div class="btn-group">
+                <h:commandButton action="#{urunlerBean.previous()}" value="Önceki" styleClass="btn btn-outline-dark" />
+                <h:commandButton action="#{urunlerBean.next()}" value="Sonraki" styleClass="btn btn-outline-dark" />
+            </div>
+            <h:dataTable styleClass="table table-striped table-hover" value="#{urunlerBean.list}" var="U">
+                <h:column>
+                    <f:facet name="Header">ID</f:facet>
+                        #{U.id}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">Kategoriler</f:facet>
-                        #{entity.kategoriler.kategoriadi}
+                    <f:facet name="Header">Kategoriler</f:facet>
+                        #{U.kategoriler.kategoriadi}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">Baslik</f:facet>
-                        #{entity.baslik}
+                    <f:facet name="Header">baslik</f:facet>
+                        #{U.baslik}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">UrunDetayi</f:facet>
-                        #{entity.urundetayi}
+                    <f:facet name="Header">urundetayi</f:facet>
+                        #{U.urundetayi}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">KampanyaliFiyat</f:facet>
-                        #{entity.kampanyali_fiyati}
+                    <f:facet name="Header">kampanyali_fiyati</f:facet>
+                        #{U.kampanyali_fiyati}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">NormalFiyat</f:facet>
-                        #{entity.normal_fiyati}
+                    <f:facet name="Header">normal_fiyati</f:facet>
+                        #{U.normal_fiyati}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">Stok</f:facet>
-                        #{entity.stok}
+                    <f:facet name="Header">stok</f:facet>
+                        #{U.stok}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">ADMINISTRATION</f:facet>
-                    <h:commandButton action="#{urunlerBean.delete(entity)}" value="Delete"/>
-                    <h:commandButton action="#{urunlerBean.setEntity(entity)}" value="Update"/>
+                    <f:facet name="Header">Delete</f:facet>
+                    <h:commandButton styleClass="btn btn-danger btn-sm" action="#{urunlerBean.delete(U)}" value="Sil">
+                        <f:ajax execute="category-table" render="category-table category-form" />
+                    </h:commandButton>
+                    <h:commandButton styleClass="btn btn-primary btn-sm" action="#{urunlerBean.setEntity(U)}" value="Güncelle" >
+                        <f:ajax execute="category-table" render="category-table category-form" />
+                    </h:commandButton>
                 </h:column>
             </h:dataTable>
-        </h:form>
-    </h:body>
-</html>
+        </h:form> 
+    </ui:define>
+</ui:composition>
 
