@@ -6,6 +6,7 @@ package dao;
 
 import entity.Kategoriler;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,24 +78,42 @@ public class KategorilerDAO extends DBConnection {
 
     }
 
-    public List<Kategoriler> getList() {
-        List<Kategoriler> list = new ArrayList<>();
+    public List<Kategoriler> getKategorilerList(int page, int pageSize) {
+        List<Kategoriler> kategorilerList = new ArrayList<>();
+        int start = (page - 1) * pageSize;
         try {
-            Statement st = this.getConnection().createStatement();
 
-            String query = "select * from kategoriler";
+            PreparedStatement pst = this.getConnection().prepareStatement("select * from kategoriler order by id  asc limit " + pageSize + "offset " + start);
 
-            ResultSet rs = st.executeQuery(query);
+            ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
-                list.add(new Kategoriler(rs.getInt("id"), rs.getString("kategoriadi")));
+                kategorilerList.add(new Kategoriler(rs.getInt("id"), rs.getString("kategoriadi")));
             }
 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
-        return list;
+        return kategorilerList;
+    }
 
+    public int count() {
+        int count = 0;
+        try {
+            Statement st = this.getConnection().createStatement();
+            String query = "select count(id) as kategoriler_count from kategoriler";
+
+            ResultSet rs = st.executeQuery(query);
+            rs.next();
+            count = rs.getInt("kategoriler_count");
+            while (rs.next()) {
+
+            }
+
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return count;
     }
 
 }
