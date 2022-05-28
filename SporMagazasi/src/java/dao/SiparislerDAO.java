@@ -6,6 +6,7 @@ package dao;
 
 import entity.Kullanicilar;
 import entity.Siparisler;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -61,27 +62,45 @@ public class SiparislerDAO extends DBConnection {
 
     }
 
-    public List<Siparisler> getList() {
-        List<Siparisler> list = new ArrayList<>();
+    public List<Siparisler> getSiparislerList(int page, int pageSize) {
+        List<Siparisler> siparislerList = new ArrayList<>();
+        int start = (page - 1) * pageSize;
         try {
-            Statement st = this.getConnection().createStatement();
 
-            String query = "select * from siparisler";
+            PreparedStatement pst = this.getConnection().prepareStatement("select * from siparisler order by id  asc limit " + pageSize + "offset " + start);
 
-            ResultSet rs = st.executeQuery(query);
+            ResultSet rs = pst.executeQuery();
 
             while (rs.next()) {
                 Kullanicilar c = this.getKullanicilarDao().findByID(rs.getInt("kullanicilar_id"));
-
-                list.add(new Siparisler(rs.getInt("id"), c, rs.getInt("fiyat"), rs.getString("siparisdurumu")));
+                siparislerList.add(new Siparisler(rs.getInt("id"), c, rs.getInt("fiyat"), rs.getString("siparisdurumu")));
             }
 
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
-        return list;
-
+        return siparislerList;
     }
+
+    public int count() {
+        int count = 0;
+        try {
+            Statement st = this.getConnection().createStatement();
+            String query = "select count(id) as siparisler_count from siparisler";
+
+            ResultSet rs = st.executeQuery(query);
+            rs.next();
+            count = rs.getInt("siparisler_count");
+            while (rs.next()) {
+
+            }
+
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return count;
+    }
+
 
     public KullanicilarDAO getKullanicilarDao() {
         if (kullanicilarDao == null) {
