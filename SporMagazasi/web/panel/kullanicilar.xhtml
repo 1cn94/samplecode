@@ -1,73 +1,101 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <h:head>
-        <title>Category</title>
-    </h:head>
-    <h:body>
-        <h:form>
-            <h:commandButton action="/index" value="Home" />
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template.xhtml">
 
+    <ui:define name="content">
+        <h:form>
+            <h:commandButton action="/private" value="Geri"/>         
         </h:form>
+        <h:form id="category-form">
+            <div class="mb-3">
+                <label class="form-label">kuladi:</label>
+                <h:inputText id="kuladi" styleClass="form-control" value="#{kullanicilarBean.entity.kuladi}" validatorMessage="Kullanıcı Adı en az 3 karakterden oluşmalıdır.">
+                    <f:validateLength maximum="50" minimum="3" />
+                </h:inputText>
+                <h:message for="sifre" style="color: red" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">sifre</label>
+                <h:inputText styleClass="form-control" value="#{kullanicilarBean.entity.sifre}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">adi</label>
+                <h:inputText styleClass="form-control" value="#{kullanicilarBean.entity.adi}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">soyadi</label>
+                <h:inputText styleClass="form-control" value="#{kullanicilarBean.entity.soyadi}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">mail</label>
+                <h:inputText styleClass="form-control" value="#{kullanicilarBean.entity.mail}"/>
+            </div>
+
+            <div class="mb-3">
+                <h:commandButton styleClass="btn btn-success" action="#{kullanicilarBean.create()}" value="Kaydet">
+                    <f:ajax execute="category-form" render="category-table category-form" />
+                </h:commandButton>
+                <h:commandButton styleClass="btn btn-primary" rendered="#{kullanicilarBean.entity.id!=0}" action="#{kullanicilarBean.update()}" value="Güncelle" >
+                    <f:ajax execute="category-form" render="category-table category-form" />
+                </h:commandButton>
+            </div>
+        </h:form>
+
         <hr />
-        <h:form>
-            Kuladi: <h:inputText value="#{kullanicilarBean.entity.kuladi}"/>
-            Sifre:  <h:inputSecret value="#{kullanicilarBean.entity.sifre}" />
-            Adi:    <h:inputText value="#{kullanicilarBean.entity.adi}" />
-            Soyadi: <h:inputText value="#{kullanicilarBean.entity.soyadi}" />
-            mail:   <h:inputText value="#{kullanicilarBean.entity.mail}" />
-            <h:commandButton rendered= "#{kullanicilarBean.entity.id==0}" action="#{kullanicilarBean.create()}" value="Create"/>
-            <h:commandButton rendered= "#{kullanicilarBean.entity.id!=0}" action="#{kullanicilarBean.update()}" value="Update"/>
-            <h:commandButton rendered= "#{kullanicilarBean.entity.id!=0}" action="#{kullanicilarBean.clear()}" value="Clear Form"/>
-        </h:form> 
         <hr />
-        <h:form>
-            <h:dataTable value ="#{kullanicilarBean.list}" var="entity">
-                <h:column>
 
-                    <f:facet name="header">ID</f:facet>
-                        #{entity.id}
+        <h:form id="category-table">
+            <pre>
+                Page #{kullanicilarBean.page} of #{kullanicilarBean.pageCount}
+            </pre> 
+            <div class="btn-group">
+                <h:commandButton action="#{kullanicilarBean.previous()}" value="Önceki" styleClass="btn btn-outline-dark" />
+                <h:commandButton action="#{kullanicilarBean.next()}" value="Sonraki" styleClass="btn btn-outline-dark" />
+            </div>
+            <h:dataTable styleClass="table table-striped table-hover" value="#{kullanicilarBean.list}" var="k">
+                <h:column>
+                    <f:facet name="Header">ID</f:facet>
+                        #{k.id}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">Kuladi</f:facet>
-                        #{entity.kuladi}
+                    <f:facet name="Header">kuladi</f:facet>
+                        #{k.kuladi}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">Sifre</f:facet>
-                        #{entity.sifre}
+                    <f:facet name="Header">sifre</f:facet>
+                        #{k.sifre}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">Adi</f:facet>
-                        #{entity.adi}
+                    <f:facet name="Header">adi</f:facet>
+                        #{k.adi}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">Soyadi</f:facet>
-                        #{entity.soyadi}
+                    <f:facet name="Header">soyadi</f:facet>
+                        #{k.soyadi}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">Mail</f:facet>
-                        #{entity.mail}
+                    <f:facet name="Header">mail</f:facet>
+                        #{k.mail}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">Tarih</f:facet>
-                        #{entity.tarih}
+                    <f:facet name="Header">tarih</f:facet>
+                        #{k.tarih}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">ADMINISTRATION</f:facet>
-                    <h:commandButton action="#{kullanicilarBean.delete(entity)}" value="Delete"/>
-                    <h:commandButton action="#{kullanicilarBean.setEntity(entity)}" value="Update"/>
+                    <f:facet name="Header">Delete</f:facet>
+                    <h:commandButton styleClass="btn btn-danger btn-sm" action="#{kullanicilarBean.delete(k)}" value="Sil">
+                        <f:ajax execute="category-table" render="category-table category-form" />
+                    </h:commandButton>
+                    <h:commandButton styleClass="btn btn-primary btn-sm" action="#{kullanicilarBean.setEntity(k)}" value="Güncelle" >
+                        <f:ajax execute="category-table" render="category-table category-form" />
+                    </h:commandButton>
                 </h:column>
             </h:dataTable>
-        </h:form>
-    </h:body>
-</html>
+        </h:form> 
+    </ui:define>
+</ui:composition>
 

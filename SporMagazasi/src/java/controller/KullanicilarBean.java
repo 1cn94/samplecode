@@ -8,14 +8,11 @@ import dao.KullanicilarDAO;
 import entity.Kullanicilar;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
+import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- *
- * @author oktao
- */
-@Named
+@Named(value = "kullanicilarBean")
 @SessionScoped
 public class KullanicilarBean implements Serializable {
 
@@ -23,10 +20,53 @@ public class KullanicilarBean implements Serializable {
     private KullanicilarDAO dao;
     private List<Kullanicilar> list;
 
-    /**
-     * Creates a new instance of KullanicilarBean
-     */
+    private int page = 1;
+    private int pageSize = 3;
+    private int pageCount;
+
     public KullanicilarBean() {
+    }
+
+    public void next() {
+        if (this.page == this.getPageCount()) {
+            this.page = 1;
+        } else {
+            this.page++;
+        }
+
+    }
+
+    public void previous() {
+        if (this.page == 1) {
+            this.page = this.getPageCount();
+        } else {
+            this.page--;
+        }
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public void setPageCount(int pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    public int getPageCount() {
+        this.pageCount = (int) Math.ceil(this.getDao().count() / (double) pageSize);
+        return pageCount;
     }
 
     public String getKuladi(int id) {
@@ -97,7 +137,10 @@ public class KullanicilarBean implements Serializable {
     }
 
     public List<Kullanicilar> getList() {
-        this.list = this.getDao().getList();
+        this.list = this.getDao().getKullanicilarList(page, pageSize);
+        for (int i = 0; i < this.list.size(); i++) {
+            System.out.println(this.list.get(i).getId());
+        }
         return list;
     }
 
