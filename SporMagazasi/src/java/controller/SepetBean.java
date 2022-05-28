@@ -9,6 +9,7 @@ import entity.Sepet;
 import jakarta.inject.Named;
 import jakarta.enterprise.context.SessionScoped;
 import java.io.Serializable;
+
 import java.util.List;
 
 /**
@@ -27,6 +28,51 @@ public class SepetBean implements Serializable {
      * Creates a new instance of SepetBean
      */
     public SepetBean() {
+    }
+    private int page = 1;
+    private int pageSize = 1;
+    private int pageCount;
+
+    public void next() {
+        if (this.page == this.getPageCount()) {
+            this.page = 1;
+        } else {
+            this.page++;
+        }
+
+    }
+
+    public void previous() {
+        if (this.page == 1) {
+            this.page = this.getPageCount();
+        } else {
+            this.page--;
+        }
+    }
+
+    public int getPage() {
+        return page;
+    }
+
+    public void setPage(int page) {
+        this.page = page;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public void setPageCount(int pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    public int getPageCount() {
+        this.pageCount = (int) Math.ceil(this.getDao().count() / (double) pageSize);
+        return pageCount;
     }
 
     public String getTitle(int id) {
@@ -73,7 +119,10 @@ public class SepetBean implements Serializable {
     }
 
     public List<Sepet> getList() {
-        this.list = this.getDao().getList();
+        this.list = this.getDao().getSepetList(page, pageSize);
+        for (int i = 0; i < this.list.size(); i++) {
+            System.out.println(this.list.get(i).getId());
+        }
         return list;
     }
 

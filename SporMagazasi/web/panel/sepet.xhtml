@@ -1,56 +1,79 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <h:head>
-        <title>Sepet</title>
-    </h:head>
-    <h:body>
-        <h:form>
-            <h:commandButton action="/index" value="Home" />
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="/template.xhtml">
 
+    <ui:define name="content">
+        <h:form>
+            <h:commandButton action="/private" value="Geri"/>         
         </h:form>
+        <h:form id="category-form">
+
+            <div class="mb-3">
+                <label class="form-label">adet</label>
+                <h:inputText styleClass="form-control" value="#{sepetBean.entity.adet}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">sepetfiyati</label>
+                <h:inputText styleClass="form-control" value="#{sepetBean.entity.sepetfiyati}"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">sepetdurum</label>
+                <h:inputText styleClass="form-control" value="#{sepetBean.entity.sepetdurum}"/>
+            </div>
+            <div class="mb-3">
+                <h:commandButton styleClass="btn btn-success" action="#{sepetBean.create()}" value="Kaydet">
+                    <f:ajax execute="category-form" render="category-table category-form" />
+                </h:commandButton>
+                <h:commandButton styleClass="btn btn-primary" rendered="#{sepetBean.entity.id!=0}" action="#{sepetBean.update()}" value="Güncelle" >
+                    <f:ajax execute="category-form" render="category-table category-form" />
+                </h:commandButton>
+            </div>
+        </h:form>
+
         <hr />
-        <h:form>
-
-            Adet:  <h:inputText value="#{sepetBean.entity.adet}"/>
-            Sepetfiyati: <h:inputText value="#{sepetBean.entity.sepetfiyati}"/>
-            sepetdurum:<h:inputText value="#{sepetBean.entity.sepetdurum}"/>
-            <h:commandButton rendered= "#{sepetBean.entity.id==0}" action="#{sepetBean.create()}" value="Create"/>
-            <h:commandButton rendered= "#{sepetBean.entity.id!=0}" action="#{sepetBean.update()}" value="Update"/>
-        </h:form> 
         <hr />
-        <h:form>
-            <h:dataTable value ="#{sepetBean.list}" var="entity">
-                <h:column>
 
-                    <f:facet name="header">ID</f:facet>
-                        #{entity.id}
+        <h:form id="category-table">
+            <pre>
+                Page #{sepetBean.page} of #{sepetBean.pageCount}
+            </pre>
+            <div class="btn-group">
+                <h:commandButton action="#{sepetBean.previous()}" value="Önceki" styleClass="btn btn-outline-dark" />
+                <h:commandButton action="#{sepetBean.next()}" value="Sonraki" styleClass="btn btn-outline-dark" />
+            </div>
+
+            <h:dataTable styleClass="table table-striped table-hover" value="#{sepetBean.list}" var="sepet">
+                <h:column>
+                    <f:facet name="Header">ID</f:facet>
+                        #{sepet.id}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">Adet</f:facet>
-                        #{entity.adet}
+                    <f:facet name="Header">adet</f:facet>
+                        #{sepet.adet}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">SepetFiyati</f:facet>
-                        #{entity.sepetfiyati}
+                    <f:facet name="Header">sepetfiyati</f:facet>
+                        #{sepet.sepetfiyati}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">SepetDurum</f:facet>
-                        #{entity.sepetdurum}
+                    <f:facet name="Header">sepetdurum</f:facet>
+                        #{sepet.sepetdurum}
                 </h:column>
                 <h:column>
-
-                    <f:facet name="header">ADMINISTRATION</f:facet>
-                    <h:commandButton action="#{sepetBean.delete(entity)}" value="Delete"/>
-                    <h:commandButton action="#{sepetBean.setEntity(entity)}" value="Update"/>
+                    <f:facet name="Header">Delete</f:facet>
+                    <h:commandButton styleClass="btn btn-danger btn-sm" action="#{sepetBean.delete(sepet)}" value="Sil">
+                        <f:ajax execute="category-table" render="category-table category-form" />
+                    </h:commandButton>
+                    <h:commandButton styleClass="btn btn-primary btn-sm" action="#{sepetBean.setEntity(sepet)}" value="Güncelle" >
+                        <f:ajax execute="category-table" render="category-table category-form" />
+                    </h:commandButton>
                 </h:column>
             </h:dataTable>
-        </h:form>
-    </h:body>
-</html>
+        </h:form> 
+    </ui:define>
+</ui:composition>
 
