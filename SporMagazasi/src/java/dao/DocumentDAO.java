@@ -11,17 +11,22 @@ public class DocumentDAO extends DBConnection {
 
     public List<Document> findAll() {
         List<Document> dList = new ArrayList<>();
+
         try {
             Statement st = this.getConnection().createStatement();
             String query = "select * from document";
+
             ResultSet rs = st.executeQuery(query);
 
             while (rs.next()) {
-                Document d = new Document();
-                d.setId(rs.getLong("id"));
-                d.setFilePath(rs.getString("path"));
-                d.setFileName(rs.getString("name"));
-                d.setFileType(rs.getString("type"));
+
+                Document doc = new Document();
+                doc.setId(rs.getLong("id"));
+                doc.setFileName(rs.getString("fileName"));
+                doc.setFilePath(rs.getString("filePath"));
+                doc.setFileType(rs.getString("fileType"));
+                System.out.println(doc.getId() + doc.getFileName());
+                dList.add(doc);
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
@@ -31,7 +36,7 @@ public class DocumentDAO extends DBConnection {
     }
 
     public void insert(Document d) {
-        String query = "insert into document(path,name,type) value(?,?,?)";
+        String query = "insert into document(filepath,filename,filetype) values(?,?,?)";
         try {
             PreparedStatement pst = this.getConnection().prepareStatement(query);
             pst.setString(1, d.getFilePath());
@@ -45,5 +50,4 @@ public class DocumentDAO extends DBConnection {
 
         }
     }
-
 }

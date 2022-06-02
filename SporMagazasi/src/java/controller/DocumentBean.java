@@ -18,18 +18,15 @@ public class DocumentBean implements Serializable {
     private Document document;
     private List<Document> documentList;
     private DocumentDAO documentDao;
-
+    private String documentName;
     private Part doc;
-    private final String uploadTo = "/Users/user/upload";
+    private final String uploadTo = "/Users/Bircan/user/upload/dosyaayakkabi.jpg";
 
-    /*
-    Dosya yolunu belirt.
-     */
     public void upload() {
         try {
-            InputStream input = doc.getInputStream();
-            File f = new File(uploadTo + doc.getSubmittedFileName());
 
+            InputStream input = doc.getInputStream();
+            File f = new File(this.getUploadTo() + documentName + ".jpg");
             Files.copy(input, f.toPath());
 
             document = this.getDocument();
@@ -38,6 +35,7 @@ public class DocumentBean implements Serializable {
             document.setFileType(doc.getContentType());
 
             this.getDocumentDao().insert(document);
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -48,6 +46,7 @@ public class DocumentBean implements Serializable {
     }
 
     public void setDoc(Part doc) {
+
         this.doc = doc;
     }
 
