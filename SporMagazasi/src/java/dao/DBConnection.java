@@ -20,7 +20,7 @@ public abstract class DBConnection {
             try {
 
                 Class.forName("org.postgresql.Driver");
-                this.connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/sporr", "postgres", "12345");
+                this.connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/spor", "postgres", "12345");
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
